@@ -1,2 +1,2 @@
 # SpringBoot
-spring data JPA and PostgreSQl
+creating REST APIs using spring data JPA and PostgreSQl
