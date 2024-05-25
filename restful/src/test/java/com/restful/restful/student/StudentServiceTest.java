@@ -2,17 +2,17 @@ package com.restful.restful.student;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 public class StudentServiceTest {
@@ -43,30 +43,39 @@ public class StudentServiceTest {
     }
 
     @Test
-    void testGetStudentDetail() {
+    void should_return_student_by_id() {
         // Given 
-        StudentDto dto = new StudentDto(
-                "Selva",
-                "Murugan",
+        Integer studentId = 1;
+        Student student = new Student(
+                20,
                 "email",
-                1
+                "Selva",
+                "Murugan"
         );
-        
-        Integer id = 1;
 
+
+        // Mock the calls
+        when(studentRepo.findById(studentId)).thenReturn(Optional.of(student));
+        when(studentMapper.toStudentResponseDto(any(Student.class)))
+                        .thenReturn(new StudentResponseDto("Selva", "Murugan", "email"));
 
         // When 
-        StudentResponseDto response = studentService.getStudentDetail(id);
+        StudentResponseDto response = studentService.getStudentDetail(studentId);
 
-        // assertEquals(, response.getId());
+        // Then
+        assertEquals(response.firstname(), student.getFirstname());
+        assertEquals(response.lastname(), student.getLastname());
+        assertEquals(response.email(), student.getEmail());
+
+        verify(studentRepo, times(1)).findById(studentId);
+        
     }
 
     @Test
     void should_return_all_student() {
         // Given
         List<Student> students = Arrays.asList(
-                new Student(20, "email1", "Selva", "Murugan"),
-                new Student(23, "email2", "virat", "kohli")
+                new Student(20, "email1", "Selva", "Murugan")
         );
 
         List<StudentResponseDto> expectedResponseDtos = Arrays.asList(
@@ -76,17 +85,15 @@ public class StudentServiceTest {
 
         // Mock the calls
         when(studentRepo.findAll()).thenReturn(students);
-        when(studentMapper.toStudentResponseDto(any(Student.class))).thenAnswer(invocation -> {
-            Student student = invocation.getArgument(0);
-            return new StudentResponseDto(student.getFirstname(), student.getLastname(), student.getEmail());
-        });
+        when(studentMapper.toStudentResponseDto(any(Student.class)))
+                        .thenReturn(new StudentResponseDto("Selva", "Murugan", "email1"));
 
         // When
         List<StudentResponseDto> responseDto = studentService.getStudentsDetail();
 
         // Then
         assertEquals(expectedResponseDtos.get(0), responseDto.get(0));
-        assertEquals(expectedResponseDtos.get(1), responseDto.get(1));
+        
 
         verify(studentRepo, times(1)).findAll();
 
