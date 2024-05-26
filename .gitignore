@@ -1,32 +1,13 @@
 # Maven
-target/
+restful/target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
 *~.nib
-**/target/
+restful/**/target/
 release.properties
 
-# Eclipse
-.classpath
-.project
-.settings/
-.springBeans
-
-# IntelliJ IDEA
-.idea/
-*.iws
-*.iml
-*.ipr
-out/
-
-# NetBeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+restful/src/main/resources/application.properties
 
 # VS Code
 .vscode/
