@@ -34,11 +34,43 @@ public class StudentServiceTest {
     
     @Test
     void testDelete() {
+        // Given
+        int id = 1;
+
+        // When
+        studentService.delete(id);
+
+        // Then
+        verify(studentRepo, times(1)).deleteById(id);
 
     }
 
     @Test
-    void testFindAllByName() {
+    void should_find_student_by_name() {
+        // Given
+        String studentName = "Selva";
+        List<Student> students = Arrays.asList(
+                new Student(20, "email1", "Selva", "Murugan")
+        );
+
+        List<StudentResponseDto> expectedResponseDtos = Arrays.asList(
+                new StudentResponseDto("Selva", "Murugan", "email1"),
+                new StudentResponseDto("virat", "kohli", "email2")
+        );
+
+        // Mock the calls
+        when(studentRepo.findAllByFirstnameContaining(studentName)).thenReturn(students);
+        when(studentMapper.toStudentResponseDto(any(Student.class)))
+                        .thenReturn(new StudentResponseDto("Selva", "Murugan", "email1"));
+
+        // When
+        List<StudentResponseDto> responseDto = studentService.findAllByName(studentName);
+
+        // Then
+        assertEquals(expectedResponseDtos.get(0), responseDto.get(0));
+        
+
+        verify(studentRepo, times(1)).findAllByFirstnameContaining(studentName);
 
     }
 

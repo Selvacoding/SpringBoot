@@ -7,7 +7,8 @@ pom.xml.versionsBackup
 restful/**/target/
 release.properties
 
-restful/src/main/resources/application.properties
+# Ignore all properties files in the resources directory
+restful/src/main/resources/*.properties
 
 # VS Code
 .vscode/
